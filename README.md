@@ -2,7 +2,7 @@
 Test task
 
 ### Live
-- [example.com](example.com)
+- [//example.com](example.com)
 
 ### Install
 - `git clone https://github.com/gexogen921/eliftech`
@@ -10,4 +10,4 @@ Test task
 
 ### Developer
 - Stas Machulack
-- email: [thegexogen2012@gmail.com](thegexogen2012@gmail.com)
+- email: [mailto:thegexogen2012@gmail.com](thegexogen2012@gmail.com)
