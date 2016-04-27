@@ -72,7 +72,7 @@ angular.module("app").controller("main", ["$scope", "$http", function ($scope, $
 
     function sumCompanies(company, total) {
         total = total || 0;
-        total += parseInt(company.earnings);
+        total += parseFloat(company.earnings);
 
         for (var i = 0; i < company.children.length; i++) {
             total = sumCompanies(company.children[i], total);
