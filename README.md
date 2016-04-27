@@ -2,7 +2,7 @@
 Test task
 
 ### Live
-- [example.com](//example.com)
+- [Example](http://178.62.230.111/eliftech)
 
 ### Install
 - `git clone https://github.com/gexogen921/eliftech`
