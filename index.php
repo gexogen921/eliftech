@@ -23,8 +23,8 @@
                     </div>
                     <div class="media-body">
                         <input type="text" class="form-control" placeholder="Name" ng-model="newCompany.name">
-                        <hr>
                         <div class="content">
+                            <hr class="split">
                             <div class="inputs">
                                 <select class="form-control" title="Parent" ng-options="(company.depth + ' ' + company.name) for company in companiesList" ng-model="newCompany.parent">
                                     <option value="">Root</option>
@@ -59,8 +59,8 @@
             </div>
             <div class="media-body">
                 <input type="text" class="form-control" placeholder="Name" ng-model="company.name">
-                <hr>
                 <div class="content">
+                    <hr class="split">
                     <div class="inputs">
                         <input type="text" class="form-control" placeholder="Total" ng-value="company.total | currency" ng-disabled="true">
                         <div class="input-group" style="margin-top: 5px;">

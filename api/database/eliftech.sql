@@ -21,7 +21,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `companies`;
 CREATE TABLE `companies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_parent` int(11) DEFAULT NULL,
+  `id_parent` int(11) DEFAULT '0',
   `name` varchar(255) DEFAULT NULL,
   `earnings` float DEFAULT '0',
   PRIMARY KEY (`id`)
