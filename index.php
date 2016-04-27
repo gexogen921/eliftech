@@ -3,10 +3,10 @@
     <head>
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="styles/styles.css">
 
-        <script src="assets/angular/angular.js"></script>
+        <script src="assets/angular/angular.min.js"></script>
 
         <script src="javascript/app.js"></script>
 
