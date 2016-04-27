@@ -3,17 +3,16 @@
     <head>
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css">
         <link rel="stylesheet" href="styles/styles.css">
 
-        <script src="assets/angular/angular.min.js"></script>
+        <script src="assets/angular/angular.js"></script>
 
         <script src="javascript/app.js"></script>
 
-        <title>Tree</title>
+        <title>Eliftech</title>
     </head>
     <body ng-controller="main">
-
         <div class="container">
             <h3 class="text-center">Add company</h3>
             <hr>
@@ -49,12 +48,12 @@
                 <h3 class="text-center">Tree companies</h3>
                 <hr>
                 <div class="media-list">
-                    <div class="media" ng-repeat="company in companiesTree" ng-include="'tree.html'"></div>
+                    <div class="media" ng-repeat="company in companiesTree" ng-include="'companies.html'"></div>
                 </div>
             </div>
         </div>
 
-        <script id="tree.html" type="text/ng-template">
+        <script id="companies.html" type="text/ng-template">
             <div class="media-left">
                 <img class="img-rounded media-object" src="http://placehold.it/128x128?text=LOGO" style="width: 128px; height: 128px;" alt="">
             </div>
@@ -76,9 +75,8 @@
                     <div class="clearfix"></div>
                 </div>
 
-                <div class="media" ng-repeat="company in company.children" ng-include="'tree.html'"></div>
+                <div class="media" ng-repeat="company in company.children" ng-include="'companies.html'"></div>
             </div>
         </script>
-
     </body>
 </html>

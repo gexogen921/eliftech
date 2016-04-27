@@ -10,6 +10,7 @@ switch ($method) {
         $companies = getCompanies($mysqli);
 
         die(json_encode([
+            'method' => "get",
             'companies' => $companies,
             'status' => !empty($companies)
         ]));
@@ -20,6 +21,7 @@ switch ($method) {
             $companies = getCompanies($mysqli);
 
             die(json_encode([
+                'method' => "update",
                 'companies' => $companies,
                 'status' => $status
             ]));
@@ -28,6 +30,7 @@ switch ($method) {
             $companies = getCompanies($mysqli);
 
             die(json_encode([
+                'method' => "insert",
                 'companies' => $companies,
                 'status' => $status
             ]));
@@ -39,6 +42,7 @@ switch ($method) {
         $companies = getCompanies($mysqli);
 
         die(json_encode([
+            'method' => "delete",
             'companies' => $companies,
             'status' => $status
         ]));

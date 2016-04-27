@@ -1,5 +1,5 @@
 <?php
-$mysqli = new mysqli("localhost", "root", "root", "tree");
+$mysqli = new mysqli("localhost", "root", "root", "eliftech");
 
 if ($mysqli->connect_errno) {
     die(json_encode([
