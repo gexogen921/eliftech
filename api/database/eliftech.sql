@@ -26,8 +26,3 @@ CREATE TABLE `companies` (
   `earnings` float DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of companies
--- ----------------------------
-INSERT INTO `companies` VALUES ('18', '0', '3456', '345');
