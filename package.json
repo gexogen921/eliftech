@@ -1,0 +1,37 @@
+{
+  "name": "eliftech",
+  "version": "2.0.0",
+  "description": "Test task",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gexogen921/eliftech.git"
+  },
+  "author": "Stas Machuliak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gexogen921/eliftech/issues"
+  },
+  "homepage": "https://github.com/gexogen921/eliftech#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.11",
+    "nodemon": "^1.17.5",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.3",
+    "webpack-dev-server": "^3.1.4"
+  }
+}

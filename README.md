@@ -6,7 +6,7 @@ Test task
 
 ### Install
 - `git clone https://github.com/gexogen921/eliftech`
-- execute database in mysql from `api/database/eliftech.sql`
+- execute database in mysql from `server/database/eliftech.sql`
 
 ### Developer
 - Stas Machulack
