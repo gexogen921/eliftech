@@ -6,7 +6,10 @@ Test task
 
 ### Install
 - `git clone https://github.com/gexogen921/eliftech`
-- execute database in mysql from `server/database/eliftech.sql`
+
+### Setup
+- `npm i`
+- `npx webpack-dev-server`
 
 ### Developer
 - Stas Machulack

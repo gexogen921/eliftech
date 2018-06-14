@@ -1,206 +1,137 @@
 import React, { Component } from 'react';
-import cloneDeep from 'lodash/cloneDeep';
+import axios from 'axios';
 
-const companies = [
-  {
-    id: '19283783257',
-    name: 'com1',
-    earnings: 100,
-    total: 200,
-    children: [
-      {
-        id: '123',
-        name: 'com1-1',
-        earnings: 100,
-      },
-      {
-        id: '1234',
-        name: 'com1-2',
-        earnings: 100,
-      },
-    ],
-  },
-  {
-    id: '87654323432',
-    name: 'com2',
-    earnings: 100,
-    total: 200,
-    children: [
-      {
-        id: '345',
-        name: 'com2-1',
-        earnings: 100,
-      },
-      {
-        id: '3456',
-        name: 'com2-2',
-        earnings: 100,
-      },
-    ],
-  },
-  {
-    id: '2343534565',
-    name: 'com3',
-    earnings: 100,
-    total: 200,
-    children: [
-      {
-        id: '234',
-        name: 'com3-1',
-        earnings: 100,
-      },
-      {
-        id: '2345',
-        name: 'com3-2',
-        earnings: 100,
-      },
-    ],
-  },
-];
+import AddForm from './add-form';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      companies: cloneDeep(companies),
-      addForm: {
-        id: '',
-        name: '',
-        earnings: 0,
-      }
+      companies: [],
     };
   }
 
-  getUniqId() {
-    return Math.random() * (10000 - 1) + 1;
+  componentWillMount() {
+    axios.get('http://127.0.0.1:3000')
+      .then((response) => {
+        this.setState({
+          companies: this.calculateTree(response.data.companies),
+        });
+      });
   }
 
-  handleChangeName(event, item) {
-    item.name = event.target.value;
-    this.setState({ companies: this.state.companies });
+  calculateTotal(company, total = 0) {
+    total += parseFloat(company.earnings);
+
+    company.companies.forEach((company) => {
+      total = this.calculateTotal(company, total);
+    });
+
+    return total;
   }
 
-  handleChangeEarnings(event, item) {
-    item.earnings = parseFloat(event.target.value);
-    this.setState({ companies: this.state.companies });
+  calculateTree(companies) {
+    companies.forEach((company) => {
+      company.total = this.calculateTotal(company);
+
+      this.calculateTree(company.companies);
+    });
+
+    return companies;
+  }
+
+  handleChangeForm(event, company, key) {
+    company[key] = event.target.value;
+
+    this.calculateTree(this.state.companies);
+    this.setState({
+      companies: this.state.companies,
+    });
   }
 
   handleClickCancel() {
-    this.setState({ companies: cloneDeep(companies) });
+    axios.get('http://127.0.0.1:3000')
+      .then((response) => {
+        this.setState({
+          companies: this.calculateTree(response.data.companies),
+        });
+      });
   }
 
   handleClickSave() {
-    console.log(this.state.companies);
+    axios.post('http://127.0.0.1:3000', { companies: this.state.companies })
+      .then((response) => {
+        if(response.data.status) {
+          console.log(response.data.message, " - error!");
+        }
+      });
   }
 
-  handleClickParentAdd() {
-    this.state.addForm.total = 0;
-    this.state.companies.push(this.state.addForm);
-    this.setState({ companies: this.state.companies });
+  handleClickAdd(companies, form) {
+    companies.push({
+      id: Math.random(),
+      name: form.name,
+      earnings: form.earnings,
+      companies: [],
+    });
 
+    this.calculateTree(this.state.companies);
     this.setState({
-      addForm: {
-        id: '',
-        name: '',
-        earnings: 0
+      companies: this.state.companies,
+    });
+  }
+
+  handleClickDelete(companies, id) {
+    companies.forEach((company, index) => {
+      if (company.id === id) {
+        companies.splice(index, 1);
       }
     });
-  }
 
-  handleClickAdd(item) {
-    if(!item.children)
-      item.children = [];
-
-    item.children.push(this.state.addForm);
-    this.setState({ companies: this.state.companies });
-
+    this.calculateTree(this.state.companies);
     this.setState({
-      addForm: {
-        id: '',
-        name: '',
-        earnings: 0
-      }
+      companies: this.state.companies,
     });
   }
 
-  handleChangeAddNameChild(event) {
-    this.setState({
-      addForm: {
-        id: this.state.addForm.id || this.getUniqId(),
-        name: event.target.value,
-        earnings: this.state.addForm.earnings
-      }
-    });
-  }
-
-  handleChangeAddEarningsChild(event) {
-    this.setState({
-      addForm: {
-        id: this.state.addForm.id || this.getUniqId(),
-        name: this.state.addForm.name,
-        earnings: event.target.value
-      }
-    });
-  }
-
-  handleDeleteChild(children, item) {
-    console.log(item);
-
-    children.map((child, index) => {
-      if (child.id === item.id)
-        children.splice(index, 1)
-    });
-
-    this.setState({ companies: this.state.companies });
-  }
-
-  renderTree(children) {
-    return children.map((item, index) => (
-      <li key={item.id} className="list-group-item">
-        <div className="row">
+  renderTree(companies) {
+    return companies.map((company, index) => (
+      <li key={company.id} className="list-group-item">
+        <div className="row mb-3">
           <div className="col-4">
-            <input type="text" className="form-control" value={item.name}
-                   onChange={e => this.handleChangeName(e, item)}/>
+            <input type="text" className="form-control" value={company.name}
+                   onChange={e => this.handleChangeForm(e, company, 'name')}/>
           </div>
           <div className="col-4">
-            <input type="text" className="form-control" value={item.earnings}
-                   onChange={e => this.handleChangeEarnings(e, item)}/>
+            <input type="text" className="form-control" value={company.earnings}
+                   onChange={e => this.handleChangeForm(e, company, 'earnings')}/>
           </div>
           <div className="col-4">
-            {item.total || item.total === 0 ?
+            {company.total ?
               <div className="row">
                 <div className="col-6">
-                  <input type="text" className="form-control" defaultValue={item.total} disabled="true"/>
+                  <input type="text" className="form-control" value={company.total} disabled="true"/>
                 </div>
                 <div className="col-6">
-                  <button type="button" className="btn btn-block btn-warning" onClick={() => this.handleDeleteChild(children, item)}>Remove</button>
+                  <button type="button" className="btn btn-block btn-warning"
+                          onClick={() => this.handleClickDelete(companies, company.id)}>Remove
+                  </button>
                 </div>
               </div>
               :
-              <button type="button" className="btn btn-block btn-warning" onClick={() => this.handleDeleteChild(children, item)}>Remove</button>
+              <button type="button" className="btn btn-block btn-warning"
+                      onClick={() => this.handleClickDelete(companies, company.id)}>Remove</button>
             }
           </div>
         </div>
 
-        <div className="row mt-3">
-          <div className="col-4">
-            <input type="text" className="form-control" defaultValue=""
-                   onChange={(event) => this.handleChangeAddNameChild(event)}/>
-          </div>
-          <div className="col-4">
-            <input type="text" className="form-control" defaultValue=""
-                   onChange={(event) => this.handleChangeAddEarningsChild(event)}/>
-          </div>
-          <div className="col-4">
-            <button type="button" className="btn btn-block btn-info" onClick={() => this.handleClickAdd(item)}>Add
-            </button>
-          </div>
-        </div>
-        {item.children ?
+        <AddForm onSubmit={(form) => this.handleClickAdd(company.companies, form)}/>
+
+        {company.companies.length ?
           <div className="row">
             <div className="col-12">
-              <ul className="list-group mt-3">{this.renderTree(item.children)}</ul>
+              <ul className="list-group mt-3">{this.renderTree(company.companies)}</ul>
             </div>
           </div>
           : null
@@ -223,21 +154,19 @@ export default class App extends Component {
             <label>Total</label>
           </div>
         </div>
-        <ul className="list-group mb-4">{this.renderTree(this.state.companies)}</ul>
-        <div className="row mt-3 mb-3">
-          <div className="col-4">
-            <input type="text" className="form-control" defaultValue=""
-                   onChange={(event) => this.handleChangeAddNameChild(event)}/>
-          </div>
-          <div className="col-4">
-            <input type="text" className="form-control" defaultValue=""
-                   onChange={(event) => this.handleChangeAddEarningsChild(event)}/>
-          </div>
-          <div className="col-4">
-            <button type="button" className="btn btn-block btn-info" onClick={() => this.handleClickParentAdd()}>Add
-            </button>
-          </div>
-        </div>
+
+        <ul className="list-group mb-4">
+          {this.renderTree(this.state.companies)}
+
+          <li className="list-group-item">
+            <div className="row">
+              <div className="col-12">
+                <AddForm onSubmit={(form) => this.handleClickAdd(this.state.companies, form)}/>
+              </div>
+            </div>
+          </li>
+        </ul>
+
         <button type="button" className="btn btn-danger mr-2" onClick={() => this.handleClickCancel()}>Cancel</button>
         <button type="button" className="btn btn-success mr-2" onClick={() => this.handleClickSave()}>Save</button>
       </div>
