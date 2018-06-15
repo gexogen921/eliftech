@@ -24,15 +24,4 @@ module.exports = {
   },
 
   devtool: 'inline-source-map',
-
-  devServer: {
-    host: '127.0.0.1',
-    port: 4200,
-    contentBase: __dirname,
-    publicPath: '/bundle/',
-    historyApiFallback: true,
-    stats: 'minimal',
-    overlay: false,
-    https: false,
-  },
 };
