@@ -1,20 +1,22 @@
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
+
 const app = express();
-mongoose.connect('mongodb://127.0.0.1:27017/eliftech');
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/eliftech');
+mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-let api = require("./api");
-app.use('/', api);
+app.use(express.static(path.join(__dirname, '../')));
+
+app.use('/api', require('./api'));
 
 app.use((req, res, next) => {
   next(new Error('Page not found'));
 });
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500);

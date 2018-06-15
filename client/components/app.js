@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
 import axios from 'axios';
+import React, { Component } from 'react';
 
 import AddForm from './add-form';
 
@@ -13,7 +13,7 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://127.0.0.1:3000')
+    axios.get('/api')
       .then((response) => {
         this.setState({
           companies: this.calculateTree(response.data.companies),
@@ -51,7 +51,7 @@ export default class App extends Component {
   }
 
   handleClickCancel() {
-    axios.get('http://127.0.0.1:3000')
+    axios.get('/api')
       .then((response) => {
         this.setState({
           companies: this.calculateTree(response.data.companies),
@@ -60,17 +60,20 @@ export default class App extends Component {
   }
 
   handleClickSave() {
-    axios.post('http://127.0.0.1:3000', { companies: this.state.companies })
+    axios.post('/api', { companies: this.state.companies })
       .then((response) => {
-        if(response.data.status) {
-          console.log(response.data.message, " - error!");
-        }
+        axios.get('/api')
+          .then((response) => {
+            this.setState({
+              companies: this.calculateTree(response.data.companies),
+            });
+          });
       });
   }
 
   handleClickAdd(companies, form) {
     companies.push({
-      id: Math.random(),
+      _id: Date.now().toString(16),
       name: form.name,
       earnings: form.earnings,
       companies: [],
@@ -84,7 +87,7 @@ export default class App extends Component {
 
   handleClickDelete(companies, id) {
     companies.forEach((company, index) => {
-      if (company.id === id) {
+      if (company._id === id) {
         companies.splice(index, 1);
       }
     });
@@ -97,7 +100,7 @@ export default class App extends Component {
 
   renderTree(companies) {
     return companies.map((company, index) => (
-      <li key={company.id} className="list-group-item">
+      <li key={company._id} className="list-group-item">
         <div className="row mb-3">
           <div className="col-4">
             <input type="text" className="form-control" value={company.name}
@@ -115,13 +118,13 @@ export default class App extends Component {
                 </div>
                 <div className="col-6">
                   <button type="button" className="btn btn-block btn-warning"
-                          onClick={() => this.handleClickDelete(companies, company.id)}>Remove
+                          onClick={() => this.handleClickDelete(companies, company._id)}>Remove
                   </button>
                 </div>
               </div>
               :
               <button type="button" className="btn btn-block btn-warning"
-                      onClick={() => this.handleClickDelete(companies, company.id)}>Remove</button>
+                      onClick={() => this.handleClickDelete(companies, company._id)}>Remove</button>
             }
           </div>
         </div>

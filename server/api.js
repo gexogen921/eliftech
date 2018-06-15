@@ -1,40 +1,53 @@
 const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
 
-let sheme = require('./shema');
-let Company = mongoose.model('Company', sheme);
+const router = express.Router();
+
+const Company = mongoose.model('Company', new mongoose.Schema({
+  name:  String,
+  earnings: String,
+  companies: [{}]
+}));
 
 router.get('/', function (req, res, next) {
-  Company.find().exec(function (err, companies) {
+  Company.find({}).exec(function (err, companies) {
     res.json({
-      companies: companies
+      companies: companies || [],
     });
   });
 });
 
 router.post('/', function (req, res, next) {
-  const companies = req.body.companies;
-  companies.forEach((company) => {
-    Company.update({ _id: company._id }, company, { upsert: false }, function (err, doc) {
-      if(err) {
-        return res.json({
-          message: err,
-          status: 500
-        });
-      }
+  function tree(companies) {
+    companies.forEach(function (company) {
+      company._id = mongoose.Types.ObjectId();
+      tree(company.companies);
+    });
+    return companies;
+  }
+
+  let companies = tree(req.body.companies);
+
+  Company.remove({}, function () {
+    companies.forEach(function (company, i) {
+      Company.create(company, function () {
+        if (i === companies.length - 1) {
+          res.json({
+            message: 'Successful',
+            status: 200
+          });
+        }
+      });
     });
   });
 });
 
 router.delete('/', function (req, res, next) {
-  Company.deleteOne({ _id: req.body.id }, function (err) {
-    if (err) {
-      res.json({
-        message: err,
-        status: 500
-      });
-    }
+  Company.deleteOne({ _id: req.body.id }, function () {
+    res.json({
+      message: 'Successful',
+      status: 200
+    });
   });
 });
 
