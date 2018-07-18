@@ -42,7 +42,11 @@ export default class App extends Component {
   }
 
   handleChangeForm(event, company, key) {
-    company[key] = event.target.value;
+    if(key === 'earnings') {
+      company[key] = event.target.value.replace(/[^0-9.]/g, '');
+    } else {
+      company[key] = event.target.value;
+    }
 
     this.calculateTree(this.state.companies);
     this.setState({

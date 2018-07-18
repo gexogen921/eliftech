@@ -11,7 +11,11 @@ export default class AddForm extends Component {
   }
 
   handleChangeForm(event, key) {
-    this.setState({ [key]: event.target.value });
+    if(key === 'earnings') {
+      this.setState({ [key]: event.target.value.replace(/[^0-9.]/g, '') });
+    } else {
+      this.setState({ [key]: event.target.value });
+    }
   }
 
   handleSubmit() {
